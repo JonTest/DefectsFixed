@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Random App Name68151</title>
+
+    <script type="text/javascript" src="/apps/2.0rc2/sdk.js"></script>
+
+    <script type="text/javascript">
+        Rally.onReady(function () {
+                Ext.define("DefectsFixed",{extend:"Rally.app.App",componentCls:"app",items:[{xtype:"container",itemId:"pulldown-container-id",layout:{type:"hbox",align:"stretch"},width:800}],defectStore:void 0,defectGrid:void 0,launch:function(){var me=this;console.log("our first app"),me._loadIterations()},_onIterationsReady:function(combobox,eOpts){var me=this;me._loadSeverities()},_onIterationsSelected:function(combobox,eOpts){var me=this;me._loadData()},_loadIterations:function(){var me=this,iterComboBox=Ext.create("Rally.ui.combobox.IterationComboBox",{itemId:"iter-ComboBox-id",fieldLabel:"Iteration",labelAlign:"right",width:200,listeners:{ready:me._onIterationsReady,select:me._onIterationsSelected,scope:me}});me.down("#pulldown-container-id").add(iterComboBox)},_onSeverityReady:function(combobox,eOpts){this._loadData()},_onSeveritySelected:function(combobox,eOpts){this._loadData()},_loadSeverities:function(){var me=this,severityComboBox=Ext.create("Rally.ui.combobox.FieldValueComboBox",{itemId:"severity-ComboBox-id",field:"Severity",model:"Defect",fieldLabel:"Severity",labelAlign:"right",width:200,listeners:{ready:me._onSeverityReady,select:me._onSeveritySelected,scope:me}});me.down("#pulldown-container-id").add(severityComboBox)},_getFilters:function(_selectedIterationRef,_selectedSeverityValue){var iterationFilter=Ext.create("Rally.data.wsapi.Filter",{property:"Iteration",operation:"=",value:_selectedIterationRef}),severityFilter=Ext.create("Rally.data.wsapi.Filter",{property:"Severity",operation:"=",value:_selectedSeverityValue});return iterationFilter.and(severityFilter)},_loadData:function(){var me=this,selectedIterationRef=me.down("#iter-ComboBox-id").getRecord().get("_ref"),selectedSeverityValue=me.down("#severity-ComboBox-id").getRecord().get("value"),allFilters=me._getFilters(selectedIterationRef,selectedSeverityValue);console.log("allFilters",""+allFilters),me.defectStore?(console.log("store exists"),me.defectStore.setFilter(allFilters),me.defectStore.load()):(console.log("creating store"),me.defectStore=Ext.create("Rally.data.wsapi.Store",{model:"Defect",autoLoad:!0,filters:allFilters,listeners:{load:function(myStore,myData,success){console.log("got data!",myStore,myData),me.myGrid||me._createGrid(myStore)},scope:me},fetch:["FormattedID","Name","Severity","Iteration"]}))},_createGrid:function(myStoryStore){var me=this;me.myGrid=Ext.create("Rally.ui.grid.Grid",{store:myStoryStore,columnCfgs:["FormattedID","Name","Severity","Iteration"]}),me.add(this.myGrid),console.log("what is this?",this)}});
+
+            Rally.launchApp('DefectsFixed', {
+                name:"Random App Name68151",
+	            parentRepos:""
+            });
+
+        });
+    </script>
+
+
+    <style type="text/css">
+        .app {
+     /* Add app styles here */
+}
+
+    </style>
+</head>
+<body></body>
+</html>
